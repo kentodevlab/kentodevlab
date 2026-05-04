@@ -40,7 +40,7 @@ export interface CRMSnapshot {
 export async function fetchSnapshot(locale = 'es'): Promise<CRMSnapshot> {
   const base = (process.env.CRM_API_BASE_URL ?? 'https://crm.kentodevlab.com').replace(/\/$/, '');
   const res = await fetch(`${base}/api/public/landing/snapshot?locale=${locale}`, {
-    next: { tags: ['landing:snapshot'], revalidate: 3600 },
+    cache: 'no-store',
   });
   if (!res.ok) throw new Error(`CRM snapshot failed: ${res.status}`);
   return res.json();
