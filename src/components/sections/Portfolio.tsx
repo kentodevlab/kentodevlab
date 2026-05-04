@@ -49,21 +49,19 @@ export function Portfolio({ proyectos = [], testimonios = [] }: PortfolioProps) 
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="group relative overflow-hidden rounded-2xl bg-card border border-border"
+              className="group overflow-hidden rounded-2xl bg-card border border-border flex flex-col"
             >
-              <div className="aspect-square flex items-center justify-center text-6xl bg-muted/50">
+              <div className="aspect-video flex items-center justify-center bg-muted/50 overflow-hidden">
                 {project.imagen?.startsWith('http') ? (
-                  <img src={project.imagen} alt={project.titulo} className="w-full h-full object-cover" />
+                  <img src={project.imagen} alt={project.titulo} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                 ) : (
-                  project.imagen
+                  <span className="text-4xl opacity-40">{project.imagen || '🖼️'}</span>
                 )}
               </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-background/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
-                <div className="absolute bottom-0 p-6">
-                  <span className="text-xs font-mono text-primary mb-1 block">{project.categoria}</span>
-                  <h3 className="font-semibold mb-1">{project.titulo}</h3>
-                  <p className="text-sm text-muted-foreground">{project.descripcion}</p>
-                </div>
+              <div className="p-5 flex flex-col gap-1">
+                {project.categoria && <span className="text-xs font-mono text-primary">{project.categoria}</span>}
+                <h3 className="font-semibold">{project.titulo}</h3>
+                {project.descripcion && <p className="text-sm text-muted-foreground line-clamp-2">{project.descripcion}</p>}
               </div>
             </motion.div>
           ))}
@@ -96,7 +94,7 @@ export function Portfolio({ proyectos = [], testimonios = [] }: PortfolioProps) 
                   </svg>
                 ))}
               </div>
-              <p className="text-muted-foreground mb-4">&ldquo;{testimonial.mensaje}&rdquo;</p>
+              {testimonial.mensaje && <p className="text-muted-foreground mb-4">&ldquo;{testimonial.mensaje}&rdquo;</p>}
               <div className="flex items-center gap-3">
                 {testimonial.avatar?.startsWith('http') ? (
                   <img src={testimonial.avatar} alt={testimonial.nombre} className="w-10 h-10 rounded-full object-cover" />
