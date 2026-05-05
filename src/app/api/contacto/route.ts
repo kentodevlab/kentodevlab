@@ -78,6 +78,24 @@ export async function POST(request: NextRequest) {
 
     await sendEmail(name, email, phone, company, service, budget, message);
 
+    // Forward lead to CRM for agent automation
+    const crmBase = (process.env.CRM_API_BASE_URL ?? 'https://crm.kentodevlab.com').replace(/\/$/, '');
+    fetch(`${crmBase}/api/public/landing/lead`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'origin': 'https://kentodevlab.com' },
+      body: JSON.stringify({
+        fullName: name,
+        email,
+        phone: phone || undefined,
+        businessName: company || undefined,
+        serviceInterest: service,
+        budgetRange: budget,
+        message,
+        preferredChannel: phone ? 'whatsapp' : 'email',
+        locale: 'es',
+      }),
+    }).catch(err => console.error('CRM lead forward failed:', err));
+
     return NextResponse.json({ success: true, id: data.id });
   } catch (error) {
     console.error('Error:', error);
