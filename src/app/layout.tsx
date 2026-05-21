@@ -91,6 +91,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <meta name="google-site-verification" content="CmM96X7k1QlZq3cQ6D-zsMS4MdAcqUZI_-lZPqlCTt8" />
+      <meta name="msvalidate.01" content="06960FFF9BAA139E1942BDF0A32D1236" />
       <body className={`${inter.variable} ${jetbrains.variable} min-h-screen flex flex-col bg-background text-foreground antialiased`}>
         <ThemeProvider>
           <script
