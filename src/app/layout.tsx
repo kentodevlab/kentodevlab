@@ -90,6 +90,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
+      <meta name="google-site-verification" content="CmM96X7k1QlZq3cQ6D-zsMS4MdAcqUZI_-lZPqlCTt8" />
       <body className={`${inter.variable} ${jetbrains.variable} min-h-screen flex flex-col bg-background text-foreground antialiased`}>
         <ThemeProvider>
           <script
