@@ -13,10 +13,10 @@ const contactFormSchema = z.object({
   phone: z.string().optional(),
   company: z.string().optional(),
   service: z.enum(['web', 'saas', 'ecommerce', 'maintenance', 'other'], {
-    errorMap: () => ({ message: 'Selecciona un servicio' }),
+    error: 'Selecciona un servicio',
   }),
   budget: z.enum(['<1000', '1000-3000', '3000-5000', '5000-10000', '>10000'], {
-    errorMap: () => ({ message: 'Selecciona un presupuesto' }),
+    error: 'Selecciona un presupuesto',
   }),
   message: z.string().min(10, 'El mensaje debe tener al menos 10 caracteres'),
 });
@@ -63,8 +63,10 @@ export function Contacto() {
       email: '',
       phone: '',
       company: '',
-      service: undefined,
-      budget: undefined,
+      // Los selects usan placeholder deshabilitado; los valores son válidos
+      // para Zod pero el usuario debe confirmar su elección activamente.
+      service: 'web' as const,
+      budget: '<1000' as const,
       message: '',
     },
   });
@@ -290,11 +292,7 @@ export function Contacto() {
                       className={errors.service ? fieldErrorClass : fieldClass}
                       aria-required="true"
                       aria-describedby={errors.service ? 'contact-service-error' : undefined}
-                      defaultValue=""
                     >
-                      <option value="" disabled>
-                        Selecciona un servicio…
-                      </option>
                       {serviceOptions.map((option) => (
                         <option key={option.value} value={option.value}>
                           {option.label}
@@ -319,11 +317,7 @@ export function Contacto() {
                       className={errors.budget ? fieldErrorClass : fieldClass}
                       aria-required="true"
                       aria-describedby={errors.budget ? 'contact-budget-error' : undefined}
-                      defaultValue=""
                     >
-                      <option value="" disabled>
-                        Selecciona un rango…
-                      </option>
                       {budgetOptions.map((option) => (
                         <option key={option.value} value={option.value}>
                           {option.label}
