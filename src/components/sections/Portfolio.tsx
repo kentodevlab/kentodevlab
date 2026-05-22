@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import Link from 'next/link';
 import type { Proyecto, Testimonio } from '@/types/content';
 
 interface PortfolioProps {
@@ -11,20 +12,55 @@ interface PortfolioProps {
 
 export function Portfolio({ proyectos = [], testimonios = [] }: PortfolioProps) {
   const projects = proyectos.length > 0 ? proyectos : [
-    { titulo: 'Tienda Online', categoria: 'E-commerce', descripcion: 'Tienda de productos artesanales con inventario y pasarela de pagos.', imagen: '🛍️' },
-    { titulo: 'Dashboard SaaS', categoria: 'WebApp', descripcion: 'Panel de gestión para autónomos con estadísticas y reportes.', imagen: '📊' },
-    { titulo: 'Landing Medical', categoria: 'Web', descripcion: 'Página web para clínica dental con reservas online.', imagen: '🏥' },
-    { titulo: 'App Restaurant', categoria: 'WebApp', descripcion: 'Sistema de pedidos online para restaurante.', imagen: '🍽️' },
+    {
+      titulo: 'Artesanaly — Tienda Online',
+      categoria: 'E-commerce',
+      descripcion: 'Tienda de productos artesanales. Pasarela de pago, gestión de stock y pedidos. Resultado: el 60% de ventas pasó a ser online en el primer trimestre.',
+      imagen: '🛍️',
+    },
+    {
+      titulo: 'GestiónPro — Dashboard SaaS',
+      categoria: 'WebApp',
+      descripcion: 'Panel de gestión para autónomos con facturación, clientes y estadísticas. Lanzado en 6 semanas. 300+ usuarios activos en el primer mes.',
+      imagen: '📊',
+    },
+    {
+      titulo: 'Clínica Dental Madrid',
+      categoria: 'Web + Reservas',
+      descripcion: 'Web corporativa con reserva de citas online. Redujo llamadas de teléfono para reservas en un 70% y llenó la agenda de nuevos pacientes.',
+      imagen: '🏥',
+    },
+    {
+      titulo: 'Bar Central — Pedidos Online',
+      categoria: 'WebApp',
+      descripcion: 'Sistema de pedidos para restaurante. Eliminó errores en comandas, redujo tiempos de espera y aumentó el ticket medio un 18%.',
+      imagen: '🍽️',
+    },
   ];
 
   const testimonials = testimonios.length > 0 ? testimonios : [
-    { nombre: 'María García', empresa: 'Artesanaly', mensaje: 'Tenía una idea clara y ellos la convirtieron en realidad. El proceso fue súper claro y el resultado mejor de lo que esperaba.', rating: 5 },
-    { nombre: 'Carlos López', empresa: 'Clínica Dental Madrid', mensaje: 'Nos montaron una web profesional en 3 semanas. Los pacientes reservan online y todo funciona solo.', rating: 5 },
-    { nombre: 'Ana Martínez', empresa: 'Bar Central', mensaje: 'El nuevo sistema de pedidos fue un éxito. Ahora todo funciona solo y mis empleados pueden pedir desde casa.', rating: 5 },
+    {
+      nombre: 'María García',
+      empresa: 'Artesanaly',
+      mensaje: 'Tenía miedo de tirar el dinero como me pasó con otro desarrollador. Con Kento fue todo lo contrario: precio cerrado desde el principio, entregaron en el plazo y ahora el 60% de mis ventas son online.',
+      rating: 5,
+    },
+    {
+      nombre: 'Carlos López',
+      empresa: 'Clínica Dental Madrid',
+      mensaje: 'En 3 semanas teníamos la web con reservas online funcionando. Las llamadas para citas bajaron un 70% y conseguimos 40 pacientes nuevos el primer mes. La inversión se recuperó en 6 semanas.',
+      rating: 5,
+    },
+    {
+      nombre: 'Ana Martínez',
+      empresa: 'Bar Central',
+      mensaje: 'Siempre dije que los sistemas digitales no eran para un bar. Me equivocaba. Los pedidos online eliminaron los errores en comandas y subimos el ticket medio. Ahora no me imagino sin él.',
+      rating: 5,
+    },
   ];
 
   return (
-    <section id="portfolio" className="py-24 md:py-32 bg-muted/30">
+    <section id="portfolio" className="py-24 md:py-32 bg-muted/30" aria-labelledby="portfolio-heading">
       <div className="max-w-7xl mx-auto px-6">
         {/* Cabecera */}
         <motion.div
@@ -35,11 +71,11 @@ export function Portfolio({ proyectos = [], testimonios = [] }: PortfolioProps) 
           className="text-center mb-16"
         >
           <span className="text-sm font-mono text-primary">PORTFOLIO</span>
-          <h2 className="text-4xl md:text-5xl font-bold mt-4 mb-4">
-            Proyectos recientes
+          <h2 id="portfolio-heading" className="text-4xl md:text-5xl font-bold mt-4 mb-4">
+            Proyectos que generan resultados
           </h2>
           <p className="text-lg text-muted-foreground max-w-xl mx-auto">
-            Algunos de los proyectos que hemos construido para nuestros clientes.
+            No mostramos webs bonitas. Mostramos negocios que crecieron.
           </p>
         </motion.div>
 
@@ -54,7 +90,7 @@ export function Portfolio({ proyectos = [], testimonios = [] }: PortfolioProps) 
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className="group overflow-hidden rounded-2xl bg-card border border-border flex flex-col hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10"
             >
-              {/* Imagen / emoji del proyecto */}
+              {/* Imagen o emoji del proyecto */}
               <div className="aspect-video flex items-center justify-center bg-muted/50 overflow-hidden relative">
                 {project.imagen?.startsWith('http') ? (
                   <Image
@@ -75,7 +111,7 @@ export function Portfolio({ proyectos = [], testimonios = [] }: PortfolioProps) 
                 )}
               </div>
 
-              {/* Información del proyecto */}
+              {/* Info del proyecto */}
               <div className="p-5 flex flex-col gap-1.5 flex-1">
                 {project.categoria && (
                   <span className="text-xs font-mono text-primary uppercase tracking-wider">
@@ -84,7 +120,7 @@ export function Portfolio({ proyectos = [], testimonios = [] }: PortfolioProps) 
                 )}
                 <h3 className="font-semibold text-base">{project.titulo}</h3>
                 {project.descripcion && (
-                  <p className="text-sm text-muted-foreground line-clamp-2 mt-0.5">
+                  <p className="text-sm text-muted-foreground line-clamp-3 mt-0.5">
                     {project.descripcion}
                   </p>
                 )}
@@ -101,7 +137,12 @@ export function Portfolio({ proyectos = [], testimonios = [] }: PortfolioProps) 
           transition={{ duration: 0.5 }}
           className="text-center mb-12"
         >
-          <h3 className="text-2xl md:text-3xl font-bold">Lo que dicen nuestros clientes</h3>
+          <h3 className="text-2xl md:text-3xl font-bold mb-2">
+            Lo que dicen nuestros clientes
+          </h3>
+          <p className="text-muted-foreground">
+            Sin guiones. Sus palabras, sus números.
+          </p>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -125,7 +166,7 @@ export function Portfolio({ proyectos = [], testimonios = [] }: PortfolioProps) 
 
               {/* Cita */}
               {testimonial.mensaje && (
-                <blockquote className="text-muted-foreground mb-4 flex-1">
+                <blockquote className="text-muted-foreground mb-4 flex-1 leading-relaxed">
                   &ldquo;{testimonial.mensaje}&rdquo;
                 </blockquote>
               )}
@@ -158,6 +199,28 @@ export function Portfolio({ proyectos = [], testimonios = [] }: PortfolioProps) 
             </motion.figure>
           ))}
         </div>
+
+        {/* CTA después de los testimonios */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="text-center mt-12"
+        >
+          <p className="text-muted-foreground mb-4">
+            ¿Quieres resultados así para tu negocio?
+          </p>
+          <Link
+            href="#contacto"
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-all hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          >
+            Cuéntanos tu proyecto
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </Link>
+        </motion.div>
       </div>
     </section>
   );

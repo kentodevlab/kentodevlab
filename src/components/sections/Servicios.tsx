@@ -12,52 +12,64 @@ const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-    },
+    transition: { staggerChildren: 0.1 },
   },
 };
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.5,
-    },
-  },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
 };
 
 export function Servicios({ servicios = [] }: ServiciosProps) {
   const services = servicios.length > 0 ? servicios : [
     {
-      titulo: 'Desarrollo Web',
-      descripcion: 'Páginas web institucionales, landing pages y sitios corporativos diseñados para convertir.',
+      titulo: 'Web Corporativa',
+      descripcion: 'Tu escaparate online 24/7. Convierte visitas en llamadas, visitas a tu tienda y formularios de contacto — aunque estés durmiendo.',
       icono: '🌐',
-      caracteristicas: ['Diseño responsive', 'SEO optimizado', 'CMS fácil de usar'],
+      caracteristicas: [
+        'Diseño único, no plantillas genéricas',
+        'Posicionamiento en Google (SEO técnico)',
+        'Actualiza el contenido tú mismo, sin ayuda',
+      ],
       col_span: 'md:col-span-2',
+      desde: 'Desde 1.500€',
     },
     {
-      titulo: 'SaaS & WebApps',
-      descripcion: 'Aplicaciones web personalizadas con autenticación, dashboards y funcionalidades avanzadas.',
-      icono: '⚡',
-      caracteristicas: ['Auth robusta', 'Dashboard admin', 'APIs REST/GraphQL'],
-      col_span: 'md:col-span-1',
-    },
-    {
-      titulo: 'E-commerce',
-      descripcion: 'Tiendas online con pasarela de pagos, inventario y gestión de pedidos integrada.',
+      titulo: 'Tienda Online',
+      descripcion: 'Vende mientras duermes. Crea tu catálogo, cobra con tarjeta o PayPal y gestiona pedidos desde el móvil.',
       icono: '🛒',
-      caracteristicas: ['Stripe / PayPal', 'Inventario', 'Reportes'],
+      caracteristicas: [
+        'Cobra con Stripe o PayPal desde el día 1',
+        'Stock, pedidos y facturas en un solo lugar',
+        'Diseñada para comprar desde el móvil',
+      ],
       col_span: 'md:col-span-1',
+      desde: 'Desde 3.500€',
     },
     {
-      titulo: 'Mantenimiento',
-      descripcion: 'Soporte continuo, actualizaciones de seguridad y mejoras mensuales.',
+      titulo: 'SaaS & Aplicaciones',
+      descripcion: 'Tu negocio tiene procesos únicos. Construimos la herramienta exacta que necesitas: sin pagar por funciones que no usas.',
+      icono: '⚡',
+      caracteristicas: [
+        'Acceso por usuarios y roles a medida',
+        'Panel de administración desde el móvil',
+        'Integración con tus sistemas actuales',
+      ],
+      col_span: 'md:col-span-1',
+      desde: 'Desde 8.000€',
+    },
+    {
+      titulo: 'Mantenimiento & Soporte',
+      descripcion: 'Tu web siempre funcionando. Nosotros nos encargamos de servidores, actualizaciones y seguridad. Tú, de tu negocio.',
       icono: '🔧',
-      caracteristicas: ['Actualizaciones', 'Seguridad 24/7', 'Soporte prioritario'],
+      caracteristicas: [
+        'Actualizaciones de seguridad automáticas',
+        'Copias de seguridad diarias',
+        'Soporte prioritario con respuesta en 4h',
+      ],
       col_span: 'md:col-span-2',
+      desde: 'Desde 99€/mes',
     },
   ];
 
@@ -73,11 +85,11 @@ export function Servicios({ servicios = [] }: ServiciosProps) {
         >
           <span className="text-sm font-mono text-primary">SERVICIOS</span>
           <h2 id="servicios-heading" className="text-4xl md:text-5xl font-bold mt-4 mb-4">
-            ¿Qué podemos hacer por ti?
+            ¿Qué necesitas?
           </h2>
           <p className="text-lg text-muted-foreground max-w-xl mx-auto">
-            Ofrecemos soluciones digitales completas para tu negocio.
-            Desde una página corporativa hasta aplicaciones complejas.
+            Somos especialistas en autónomos, comercios y PYMEs. Sin presupuestos de enterprise,
+            sin tecnicismos. Solo resultados.
           </p>
         </motion.div>
 
@@ -100,16 +112,27 @@ export function Servicios({ servicios = [] }: ServiciosProps) {
                 aria-hidden="true"
               />
               <div className="relative flex flex-col flex-1">
-                <span className="text-4xl mb-4 block" role="img" aria-label={service.titulo}>
-                  {service.icono}
-                </span>
+                {/* Icono + precio orientativo */}
+                <div className="flex items-start justify-between mb-4">
+                  <span className="text-4xl" role="img" aria-label={service.titulo}>
+                    {service.icono}
+                  </span>
+                  {(service as { desde?: string }).desde && (
+                    <span className="text-xs font-mono text-primary bg-primary/10 px-2.5 py-1 rounded-full">
+                      {(service as { desde?: string }).desde}
+                    </span>
+                  )}
+                </div>
+
                 <h3 className="text-xl font-bold mb-2">{service.titulo}</h3>
                 <p className="text-muted-foreground mb-4 flex-1">{service.descripcion}</p>
-                <ul className="space-y-2 mb-6" aria-label={`Características de ${service.titulo}`}>
+
+                {/* Features orientadas a beneficios */}
+                <ul className="space-y-2 mb-6" aria-label={`Qué incluye ${service.titulo}`}>
                   {(service.caracteristicas || []).map((feature: string, i: number) => (
-                    <li key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
                       <svg
-                        className="w-4 h-4 text-primary flex-shrink-0"
+                        className="w-4 h-4 text-primary flex-shrink-0 mt-0.5"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -121,12 +144,13 @@ export function Servicios({ servicios = [] }: ServiciosProps) {
                     </li>
                   ))}
                 </ul>
+
                 <Link
                   href="#contacto"
-                  className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary/80 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm group-hover:translate-x-0.5"
-                  aria-label={`Solicitar presupuesto para ${service.titulo}`}
+                  className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary/80 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+                  aria-label={`Pedir presupuesto para ${service.titulo}`}
                 >
-                  Solicitar presupuesto
+                  Pedir presupuesto gratis
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>

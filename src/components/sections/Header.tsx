@@ -7,10 +7,9 @@ import Image from 'next/image';
 import ThemeToggle from './ThemeToggle';
 import { useTheme } from '@/hooks/useTheme';
 
-// Fuente única de verdad para los ítems de navegación.
-// Si una sección no existe en la página, retirarla de aquí.
 const navItems = [
   { href: '#servicios', label: 'Servicios' },
+  { href: '#precios', label: 'Precios' },
   { href: '#portfolio', label: 'Portfolio' },
   { href: '#contacto', label: 'Contacto' },
 ];
@@ -22,33 +21,23 @@ export function Header() {
   const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Cerrar menú móvil al pulsar Escape
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isMobileMenuOpen) {
-        setIsMobileMenuOpen(false);
-      }
+      if (e.key === 'Escape' && isMobileMenuOpen) setIsMobileMenuOpen(false);
     };
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isMobileMenuOpen]);
 
-  // Bloquear scroll del body cuando el menú móvil está abierto
   useEffect(() => {
     document.body.style.overflow = isMobileMenuOpen ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
   }, [isMobileMenuOpen]);
-
-  function closeMobileMenu() {
-    setIsMobileMenuOpen(false);
-  }
 
   return (
     <header
@@ -87,17 +76,17 @@ export function Header() {
         </nav>
 
         {/* Acciones escritorio */}
-        <div className="hidden md:flex items-center gap-6">
+        <div className="hidden md:flex items-center gap-4">
           <ThemeToggle />
           <Link
             href="#contacto"
             className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium rounded-lg bg-accent text-accent-foreground hover:bg-accent/90 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
-            Cotizar Proyecto
+            Presupuesto gratis
           </Link>
         </div>
 
-        {/* Botón hamburguesa — móvil */}
+        {/* Botón hamburguesa */}
         <button
           className="md:hidden p-2 rounded-lg hover:bg-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -105,13 +94,7 @@ export function Header() {
           aria-expanded={isMobileMenuOpen}
           aria-controls="mobile-menu"
         >
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             {isMobileMenuOpen ? (
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             ) : (
@@ -132,16 +115,13 @@ export function Header() {
             exit={{ opacity: 0, height: 0 }}
             className="md:hidden bg-background border-b border-border"
           >
-            <nav
-              className="flex flex-col p-6 gap-4"
-              aria-label="Navegación móvil"
-            >
+            <nav className="flex flex-col p-6 gap-4" aria-label="Navegación móvil">
               {navItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
                   className="text-lg text-foreground/80 hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm py-1"
-                  onClick={closeMobileMenu}
+                  onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {item.label}
                 </Link>
@@ -151,9 +131,9 @@ export function Header() {
                 <Link
                   href="#contacto"
                   className="flex-1 inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium rounded-lg bg-accent text-accent-foreground hover:bg-accent/90 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  onClick={closeMobileMenu}
+                  onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Cotizar Proyecto
+                  Presupuesto gratis
                 </Link>
               </div>
             </nav>

@@ -20,33 +20,65 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
   name: "Kento DevLab",
-  description: "Agencia de desarrollo web en Madrid. Creamos páginas web, SaaS, WebApps y E-commerce para PYMES y autónomos.",
+  description: "Agencia de desarrollo web en Madrid especializada en PYMEs, comercios y autónomos. Webs desde 1.500€, tiendas online desde 3.500€. Precio cerrado garantizado.",
   url: "https://kento-devlab.com",
   logo: "https://kento-devlab.com/logo-light-hor.png",
   image: "https://kento-devlab.com/logo-light-hor.png",
-  telephone: "+34",
-  email: "hola@kento-devlab.com",
+  telephone: "+34600000000",
+  email: "hola@kentodevlab.com",
   address: {
     "@type": "PostalAddress",
     addressLocality: "Madrid",
     addressRegion: "Madrid",
     addressCountry: "ES",
   },
-  areaServed: {
-    "@type": "State",
-    name: "Comunidad de Madrid",
+  areaServed: [
+    { "@type": "State", name: "Comunidad de Madrid" },
+    { "@type": "Country", name: "España" },
+  ],
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: "Servicios de desarrollo web",
+    itemListElement: [
+      {
+        "@type": "Offer",
+        itemOffered: { "@type": "Service", name: "Web Corporativa" },
+        priceSpecification: { "@type": "PriceSpecification", minPrice: "1500", priceCurrency: "EUR" },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: { "@type": "Service", name: "Tienda Online (E-commerce)" },
+        priceSpecification: { "@type": "PriceSpecification", minPrice: "3500", priceCurrency: "EUR" },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: { "@type": "Service", name: "SaaS / WebApp a medida" },
+        priceSpecification: { "@type": "PriceSpecification", minPrice: "8000", priceCurrency: "EUR" },
+      },
+    ],
   },
-  serviceType: ["Desarrollo Web", "SaaS", "E-commerce", "Mantenimiento Web"],
+  serviceType: ["Desarrollo Web", "Tienda Online", "SaaS", "WebApp", "Mantenimiento Web"],
   priceRange: "€€",
 };
 
 export const metadata: Metadata = {
   title: {
-    default: 'Kento DevLab | Desarrollo Web Madrid',
+    default: 'Kento DevLab | Desarrollo Web para PYMEs en Madrid',
     template: '%s | Kento DevLab',
   },
-  description: 'Agencia de desarrollo web en Madrid. Creamos páginas web, SaaS, WebApps y E-commerce para PYMES y autónomos. Diseño moderno y escalable.',
-  keywords: ['desarrollo web', 'SaaS', 'E-commerce', 'Madrid', 'agencia digital', 'PYMES', 'autónomos', 'web development', 'tienda online'],
+  description: 'Agencia de desarrollo web en Madrid para PYMEs y autónomos. Webs desde 1.500€ · Tiendas online desde 3.500€ · Precio cerrado garantizado · 30 días de garantía · Respuesta en 24h.',
+  keywords: [
+    'desarrollo web madrid',
+    'diseño web pymes madrid',
+    'tienda online madrid',
+    'desarrollo web autonomos',
+    'agencia web madrid pequeñas empresas',
+    'SaaS desarrollo madrid',
+    'ecommerce madrid',
+    'mantenimiento web madrid',
+    'presupuesto web madrid',
+    'web corporativa madrid',
+  ],
   authors: [{ name: 'Kento DevLab' }],
   creator: 'Kento DevLab',
   publisher: 'Kento DevLab',
@@ -59,8 +91,8 @@ export const metadata: Metadata = {
     apple: '/favicon.png',
   },
   openGraph: {
-    title: 'Kento DevLab | Desarrollo Web Madrid',
-    description: 'Agencia de desarrollo web en Madrid. Creamos páginas web, SaaS, WebApps y E-commerce para PYMES y autónomos.',
+    title: 'Kento DevLab | Desarrollo Web para PYMEs en Madrid',
+    description: 'Webs desde 1.500€ · Tiendas online desde 3.500€ · Precio cerrado · 30 días de garantía. Especialistas en PYMEs y autónomos en Madrid.',
     url: 'https://kento-devlab.com',
     siteName: 'Kento DevLab',
     locale: 'es_ES',
@@ -68,8 +100,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Kento DevLab | Desarrollo Web Madrid',
-    description: 'Agencia de desarrollo web en Madrid. Creamos páginas web, SaaS, WebApps y E-commerce.',
+    title: 'Kento DevLab | Desarrollo Web para PYMEs en Madrid',
+    description: 'Webs desde 1.500€ · Tiendas online desde 3.500€ · Precio cerrado garantizado · Respuesta en 24h.',
   },
   robots: {
     index: true,
