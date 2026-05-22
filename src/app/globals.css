@@ -78,3 +78,31 @@ html {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--muted-foreground);
 }
+
+/* Eliminar el outline por defecto y usar focus-visible para mejor UX:
+   Solo aparece con teclado, no con ratón */
+*:focus {
+  outline: none;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Asegurar que los elementos con tabIndex=-1 no muestren foco visual */
+[tabindex="-1"]:focus {
+  outline: none;
+}
+
+/* Mejoras de animación reducida para usuarios que lo prefieran */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
