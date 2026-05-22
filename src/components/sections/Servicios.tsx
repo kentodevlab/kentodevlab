@@ -117,9 +117,9 @@ export function Servicios({ servicios = [] }: ServiciosProps) {
                   <span className="text-4xl" role="img" aria-label={service.titulo}>
                     {service.icono}
                   </span>
-                  {(service as { desde?: string }).desde && (
+                  {service.desde && (
                     <span className="text-xs font-mono text-primary bg-primary/10 px-2.5 py-1 rounded-full">
-                      {(service as { desde?: string }).desde}
+                      {service.desde}
                     </span>
                   )}
                 </div>
