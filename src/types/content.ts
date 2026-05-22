@@ -5,6 +5,7 @@ export interface Servicio {
   icono: string;
   caracteristicas: string[];
   col_span: string;
+  desde?: string;   // Precio orientativo visible en la tarjeta, ej. "Desde 1.500€"
   orden?: number;
   activo?: boolean;
 }

@@ -88,11 +88,16 @@ export function Hero({ hero, estadisticas = [] }: HeroProps) {
         animate="visible"
         className="relative z-10 max-w-7xl mx-auto px-6 py-32 text-center"
       >
-        {/* Pill de audiencia */}
-        <motion.div variants={itemVariants} className="mb-6">
+        {/* Pill de audiencia + disponibilidad */}
+        <motion.div variants={itemVariants} className="mb-6 flex flex-col sm:flex-row items-center justify-center gap-3">
           <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-muted text-sm text-muted-foreground font-mono">
             <span className="w-2 h-2 rounded-full bg-primary animate-pulse" aria-hidden="true" />
             {subtitulo}
+          </span>
+          {/* Señal de disponibilidad — crea urgencia legítima */}
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 border border-green-500/30 text-xs text-green-600 dark:text-green-400 font-medium">
+            <span className="w-1.5 h-1.5 rounded-full bg-green-500" aria-hidden="true" />
+            Plazas disponibles para julio
           </span>
         </motion.div>
 
