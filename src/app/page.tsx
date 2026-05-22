@@ -20,7 +20,7 @@ export default async function Home() {
   return (
     <>
       <Header />
-      <main>
+      <main id="main-content" tabIndex={-1}>
         <Hero hero={hero} estadisticas={estadisticas} />
         <Servicios servicios={servicios} />
         <Portfolio proyectos={proyectos} testimonios={testimonios} />

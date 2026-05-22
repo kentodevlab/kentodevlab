@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { BackToTop } from "@/components/BackToTop";
 import "./globals.css";
 
 const inter = Inter({
@@ -93,12 +94,20 @@ export default function RootLayout({
       <meta name="google-site-verification" content="CmM96X7k1QlZq3cQ6D-zsMS4MdAcqUZI_-lZPqlCTt8" />
       <meta name="msvalidate.01" content="06960FFF9BAA139E1942BDF0A32D1236" />
       <body className={`${inter.variable} ${jetbrains.variable} min-h-screen flex flex-col bg-background text-foreground antialiased`}>
+        {/* Enlace de salto para teclado y lectores de pantalla */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9999] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-primary focus:text-primary-foreground focus:font-medium focus:shadow-lg"
+        >
+          Saltar al contenido principal
+        </a>
         <ThemeProvider>
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
           />
           {children}
+          <BackToTop />
         </ThemeProvider>
       </body>
     </html>

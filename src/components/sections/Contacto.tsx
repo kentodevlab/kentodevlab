@@ -12,12 +12,18 @@ const contactFormSchema = z.object({
   email: z.string().email('Introduce un email válido'),
   phone: z.string().optional(),
   company: z.string().optional(),
-  service: z.enum(['web', 'saas', 'ecommerce', 'maintenance', 'other']),
-  budget: z.enum(['<1000', '1000-3000', '3000-5000', '5000-10000', '>10000']),
+  service: z.enum(['web', 'saas', 'ecommerce', 'maintenance', 'other'], {
+    errorMap: () => ({ message: 'Selecciona un servicio' }),
+  }),
+  budget: z.enum(['<1000', '1000-3000', '3000-5000', '5000-10000', '>10000'], {
+    errorMap: () => ({ message: 'Selecciona un presupuesto' }),
+  }),
   message: z.string().min(10, 'El mensaje debe tener al menos 10 caracteres'),
 });
 
 type ContactFormData = z.infer<typeof contactFormSchema>;
+
+const MESSAGE_MAX = 1000;
 
 const serviceOptions = [
   { value: 'web', label: 'Desarrollo Web' },
@@ -35,12 +41,20 @@ const budgetOptions = [
   { value: '>10000', label: 'Más de 10.000€' },
 ];
 
+/** Clases base reutilizables para los campos del formulario */
+const fieldClass =
+  'w-full px-4 py-3 rounded-xl bg-muted border border-border focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors';
+const fieldErrorClass =
+  'w-full px-4 py-3 rounded-xl bg-muted border border-red-500 focus:border-red-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500/50 transition-colors';
+
 export function Contacto() {
   const [isSubmitted, setIsSubmitted] = useState(false);
-  
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<ContactFormData>({
     resolver: zodResolver(contactFormSchema),
@@ -49,13 +63,16 @@ export function Contacto() {
       email: '',
       phone: '',
       company: '',
-      service: 'web',
-      budget: '<1000',
+      service: undefined,
+      budget: undefined,
       message: '',
     },
   });
 
+  const messageValue = watch('message') ?? '';
+
   const onSubmit = async (data: ContactFormData) => {
+    setSubmitError(null);
     try {
       const res = await fetch('/api/contacto', {
         method: 'POST',
@@ -68,9 +85,10 @@ export function Contacto() {
       }
 
       setIsSubmitted(true);
-    } catch (error) {
-      console.error('Error:', error);
-      alert('Error al enviar el mensaje. Inténtalo de nuevo.');
+    } catch {
+      setSubmitError(
+        'No hemos podido enviar tu mensaje. Comprueba tu conexión o escríbenos directamente a hola@kentodevlab.com'
+      );
     }
   };
 
@@ -78,6 +96,7 @@ export function Contacto() {
     <section id="contacto" className="py-24 md:py-32 bg-background">
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+          {/* Información de contacto */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -89,26 +108,31 @@ export function Contacto() {
               ¿Hablamos de tu proyecto?
             </h2>
             <p className="text-lg text-muted-foreground mb-8">
-              Cuéntanos qué necesitas y te enviaremos una propuesta sin compromiso. 
+              Cuéntanos qué necesitas y te enviaremos una propuesta sin compromiso.
               Respondemos en menos de 24 horas.
             </p>
 
             <div className="space-y-6 mb-8">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                  <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8m-5.99-4h9.98l-3 6H6.01l-3-6h5.98zM5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
                 </div>
                 <div>
                   <div className="text-sm text-muted-foreground">Email</div>
-                  <div className="font-medium">hola@kentodevlab.com</div>
+                  <a
+                    href="mailto:hola@kentodevlab.com"
+                    className="font-medium hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+                  >
+                    hola@kentodevlab.com
+                  </a>
                 </div>
               </div>
 
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                  <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
@@ -120,19 +144,20 @@ export function Contacto() {
               </div>
 
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                  <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
                 <div>
                   <div className="text-sm text-muted-foreground">Horario</div>
-                  <div className="font-medium">Lun - Vie: 9:00 - 19:00</div>
+                  <div className="font-medium">Lun – Vie: 9:00 – 19:00</div>
                 </div>
               </div>
             </div>
           </motion.div>
 
+          {/* Formulario */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -142,14 +167,18 @@ export function Contacto() {
           >
             <AnimatePresence mode="wait">
               {isSubmitted ? (
+                /* Estado de éxito */
                 <motion.div
+                  key="success"
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
                   className="p-8 rounded-2xl bg-card border border-border text-center"
+                  role="status"
+                  aria-live="polite"
                 >
                   <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
-                    <svg className="w-10 h-10 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-10 h-10 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
@@ -159,72 +188,113 @@ export function Contacto() {
                   </p>
                   <button
                     onClick={() => setIsSubmitted(false)}
-                    className="text-primary hover:underline"
+                    className="text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
                   >
                     Enviar otro mensaje
                   </button>
                 </motion.div>
               ) : (
+                /* Formulario */
                 <motion.form
+                  key="form"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   onSubmit={handleSubmit(onSubmit)}
                   className="p-8 rounded-2xl bg-card border border-border space-y-6"
+                  noValidate
+                  aria-label="Formulario de contacto"
                 >
+                  {/* Nombre + Email */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium mb-2">Nombre *</label>
+                      <label htmlFor="contact-name" className="block text-sm font-medium mb-2">
+                        Nombre <span className="text-red-500" aria-hidden="true">*</span>
+                      </label>
                       <input
+                        id="contact-name"
                         {...register('name')}
-                        className="w-full px-4 py-3 rounded-xl bg-muted border border-border focus:border-primary focus:outline-none transition-colors"
+                        className={errors.name ? fieldErrorClass : fieldClass}
                         placeholder="Tu nombre"
+                        autoComplete="name"
+                        aria-required="true"
+                        aria-describedby={errors.name ? 'contact-name-error' : undefined}
                       />
                       {errors.name && (
-                        <p className="text-sm text-red-500 mt-1">{errors.name.message}</p>
+                        <p id="contact-name-error" role="alert" className="text-sm text-red-500 mt-1">
+                          {errors.name.message}
+                        </p>
                       )}
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium mb-2">Email *</label>
+                      <label htmlFor="contact-email" className="block text-sm font-medium mb-2">
+                        Email <span className="text-red-500" aria-hidden="true">*</span>
+                      </label>
                       <input
+                        id="contact-email"
                         {...register('email')}
                         type="email"
-                        className="w-full px-4 py-3 rounded-xl bg-muted border border-border focus:border-primary focus:outline-none transition-colors"
+                        className={errors.email ? fieldErrorClass : fieldClass}
                         placeholder="tu@email.com"
+                        autoComplete="email"
+                        aria-required="true"
+                        aria-describedby={errors.email ? 'contact-email-error' : undefined}
                       />
                       {errors.email && (
-                        <p className="text-sm text-red-500 mt-1">{errors.email.message}</p>
+                        <p id="contact-email-error" role="alert" className="text-sm text-red-500 mt-1">
+                          {errors.email.message}
+                        </p>
                       )}
                     </div>
                   </div>
 
+                  {/* Teléfono + Empresa (opcionales) */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium mb-2">Teléfono</label>
+                      <label htmlFor="contact-phone" className="block text-sm font-medium mb-2">
+                        Teléfono
+                      </label>
                       <input
+                        id="contact-phone"
                         {...register('phone')}
-                        className="w-full px-4 py-3 rounded-xl bg-muted border border-border focus:border-primary focus:outline-none transition-colors"
+                        type="tel"
+                        className={fieldClass}
                         placeholder="+34 600 000 000"
+                        autoComplete="tel"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium mb-2">Empresa</label>
+                      <label htmlFor="contact-company" className="block text-sm font-medium mb-2">
+                        Empresa
+                      </label>
                       <input
+                        id="contact-company"
                         {...register('company')}
-                        className="w-full px-4 py-3 rounded-xl bg-muted border border-border focus:border-primary focus:outline-none transition-colors"
+                        className={fieldClass}
                         placeholder="Nombre de tu empresa"
+                        autoComplete="organization"
                       />
                     </div>
                   </div>
 
+                  {/* Servicio */}
                   <div>
-                    <label className="block text-sm font-medium mb-2">Servicio *</label>
+                    <label htmlFor="contact-service" className="block text-sm font-medium mb-2">
+                      Servicio <span className="text-red-500" aria-hidden="true">*</span>
+                    </label>
                     <select
+                      id="contact-service"
                       {...register('service')}
-                      className="w-full px-4 py-3 rounded-xl bg-muted border border-border focus:border-primary focus:outline-none transition-colors"
+                      className={errors.service ? fieldErrorClass : fieldClass}
+                      aria-required="true"
+                      aria-describedby={errors.service ? 'contact-service-error' : undefined}
+                      defaultValue=""
                     >
+                      <option value="" disabled>
+                        Selecciona un servicio…
+                      </option>
                       {serviceOptions.map((option) => (
                         <option key={option.value} value={option.value}>
                           {option.label}
@@ -232,16 +302,28 @@ export function Contacto() {
                       ))}
                     </select>
                     {errors.service && (
-                      <p className="text-sm text-red-500 mt-1">{errors.service.message}</p>
+                      <p id="contact-service-error" role="alert" className="text-sm text-red-500 mt-1">
+                        {errors.service.message}
+                      </p>
                     )}
                   </div>
 
+                  {/* Presupuesto */}
                   <div>
-                    <label className="block text-sm font-medium mb-2">Presupuesto *</label>
+                    <label htmlFor="contact-budget" className="block text-sm font-medium mb-2">
+                      Presupuesto <span className="text-red-500" aria-hidden="true">*</span>
+                    </label>
                     <select
+                      id="contact-budget"
                       {...register('budget')}
-                      className="w-full px-4 py-3 rounded-xl bg-muted border border-border focus:border-primary focus:outline-none transition-colors"
+                      className={errors.budget ? fieldErrorClass : fieldClass}
+                      aria-required="true"
+                      aria-describedby={errors.budget ? 'contact-budget-error' : undefined}
+                      defaultValue=""
                     >
+                      <option value="" disabled>
+                        Selecciona un rango…
+                      </option>
                       {budgetOptions.map((option) => (
                         <option key={option.value} value={option.value}>
                           {option.label}
@@ -249,34 +331,97 @@ export function Contacto() {
                       ))}
                     </select>
                     {errors.budget && (
-                      <p className="text-sm text-red-500 mt-1">{errors.budget.message}</p>
+                      <p id="contact-budget-error" role="alert" className="text-sm text-red-500 mt-1">
+                        {errors.budget.message}
+                      </p>
                     )}
                   </div>
 
+                  {/* Mensaje con contador de caracteres */}
                   <div>
-                    <label className="block text-sm font-medium mb-2">Mensaje *</label>
+                    <div className="flex items-center justify-between mb-2">
+                      <label htmlFor="contact-message" className="block text-sm font-medium">
+                        Mensaje <span className="text-red-500" aria-hidden="true">*</span>
+                      </label>
+                      <span
+                        className={`text-xs tabular-nums ${
+                          messageValue.length > MESSAGE_MAX * 0.9
+                            ? 'text-red-500'
+                            : 'text-muted-foreground'
+                        }`}
+                        aria-live="polite"
+                        aria-label={`${messageValue.length} de ${MESSAGE_MAX} caracteres`}
+                      >
+                        {messageValue.length}/{MESSAGE_MAX}
+                      </span>
+                    </div>
                     <textarea
+                      id="contact-message"
                       {...register('message')}
                       rows={4}
-                      className="w-full px-4 py-3 rounded-xl bg-muted border border-border focus:border-primary focus:outline-none transition-colors resize-none"
-                      placeholder="Cuéntanos sobre tu proyecto..."
+                      maxLength={MESSAGE_MAX}
+                      className={errors.message ? fieldErrorClass : `${fieldClass} resize-none`}
+                      placeholder="Cuéntanos sobre tu proyecto…"
+                      aria-required="true"
+                      aria-describedby={errors.message ? 'contact-message-error' : 'contact-message-hint'}
                     />
-                    {errors.message && (
-                      <p className="text-sm text-red-500 mt-1">{errors.message.message}</p>
+                    {errors.message ? (
+                      <p id="contact-message-error" role="alert" className="text-sm text-red-500 mt-1">
+                        {errors.message.message}
+                      </p>
+                    ) : (
+                      <p id="contact-message-hint" className="text-xs text-muted-foreground mt-1">
+                        Mínimo 10 caracteres
+                      </p>
                     )}
                   </div>
 
+                  {/* Error de envío */}
+                  <AnimatePresence>
+                    {submitError && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -8 }}
+                        role="alert"
+                        className="p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-sm text-red-500"
+                      >
+                        {submitError}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Botón de envío con spinner */}
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full px-6 py-4 rounded-xl bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full px-6 py-4 rounded-xl bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors disabled:opacity-60 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 flex items-center justify-center gap-2"
+                    aria-busy={isSubmitting}
                   >
-                    {isSubmitting ? 'Enviando...' : 'Enviar mensaje'}
+                    {isSubmitting ? (
+                      <>
+                        <svg
+                          className="w-4 h-4 animate-spin"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          aria-hidden="true"
+                        >
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                        </svg>
+                        Enviando…
+                      </>
+                    ) : (
+                      'Enviar mensaje'
+                    )}
                   </button>
 
                   <p className="text-xs text-muted-foreground text-center">
                     Al enviar este formulario, aceptas nuestra{' '}
-                    <Link href="/privacidad" className="underline hover:text-foreground">
+                    <Link
+                      href="/privacidad"
+                      className="underline hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+                    >
                       política de privacidad
                     </Link>
                   </p>
